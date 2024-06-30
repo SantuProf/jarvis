@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS - Virtual Assistant</title>
+    <link rel="shortcut icon" href="avatar.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+</head>
+
+<body>
+    <section class="main">
+        <div class="image-container">
+            <div class="image">
+                <img src="giphy.gif" alt="image">
+            </div>
+            <h1>N A T A S H A</h1>
+            <p>I'm a Virtual Assistant. I am here to support my master.</p>,<br>
+            <p>Created by Soham Mondal.</p>
+        </div>
+        <div class="input">
+            <button class="talk"><i class="fas fa-microphone-alt"></i></button>
+            <h1 class="content"> Click here to speak</h1>
+        </div>
+    </section>
+    <script>
+        const btn = document.querySelector('.talk');
+const content = document.querySelector('.content');
+
+function speak(text){
+    const text_speak = new SpeechSynthesisUtterance(text);
+
+    text_speak.rate = 1;
+    text_speak.volume = 1;
+    text_speak.pitch = 1;
+
+    window.speechSynthesis.speak(text_speak);
+}
+
+function wishMe(){
+    var day = new Date();
+    var hour = day.getHours();
+
+    if(hour>=0 && hour<12){
+        speak("Good Morning Boss...");
+    } else if(hour>=12 && hour<17){
+        speak("Good Afternoon Master...");
+    } else{
+        speak("Good Evening Sir...");
+    }
+}
+
+window.addEventListener('load', ()=>{
+    speak("Initializing...");
+    wishMe();
+});
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
+
+recognition.onresult = (event)=>{
+    const currentIndex = event.resultIndex;
+    const transcript = event.results[currentIndex][0].transcript;
+    content.textContent = transcript;
+    takeCommand(transcript.toLowerCase());
+}
+
+btn.addEventListener('click', ()=>{
+    content.textContent = "Listening...";
+    recognition.start();
+});
+
+async function takeCommand(message){
+    if(message.includes('Hi') || message.includes('hello')){
+        speak("Hello Sir, I am natasha. How May I Help You?");
+    }
+    else if(message.includes('Natasha')){
+        speak("Hi soham glad to see you. how may i help you ?");
+    }
+    else if(message.includes('beautiful')){
+        speak("Ohhhhhhhhhhhh thank you Mr. you are looking beautifull too. ");
+    }
+    else if(message.includes('mother')){
+        speak("Sibani mondal is your mother.");
+    }
+    else if(message.includes('father')){
+        speak("Haridas Modal mondal is your father.");
+    }
+    else if(message.includes('Abir')){
+        speak("Abir is ypur friend. He gives you lot of anime.");
+    }
+    else if(message.includes("open google")){
+        window.open("https://google.com", "_blank");
+        speak("Opening Google...")
+    }
+    else if(message.includes("open youtube")){
+        window.open("https://youtube.com", "_blank");
+        speak("Opening Youtube...")
+    }
+    else if(message.includes("open facebook")){
+        window.open("https://facebook.com", "_blank");
+        speak("Opening Facebook...")
+    }
+    else if(message.includes("open github")){
+        window.open("https://github.com", "_blank");
+        speak("Opening Github...")
+    }
+    else if(message.includes('search') || message.includes('search with google') || message.includes('search on internet')) {
+        window.open(`https://www.google.com/search?q=${message.replace(" ", "+")}`, "_blank");
+        const finalText = "This is what i found on internet regarding " + message;
+	    speak(finalText);
+    }
+    
+    else if(message.includes('time')) {
+        const time = new Date().toLocaleString(undefined, {hour: "numeric", minute: "numeric"})
+        const finalText = time;
+        speak(finalText);
+    }
+    else if(message.includes('date')) {
+        const date = new Date().toLocaleString(undefined, {month: "short", day: "numeric"})
+        const finalText = date;
+        speak(finalText);
+    }
+    else if(message.includes('calculator')) {
+        window.open('Calculator:///')
+        const finalText = "Opening Calculator";
+        speak(finalText);
+    } 
+    else {
+        const customPrompt = "found" + message ;
+        const response = await chat_with_gpt(customPrompt);
+        speak(response);
+    }
+}
+
+
+
+async function chat_with_gpt(prompt) {
+    try {
+        const api_key = await read_api_key(); 
+        const url = "https://chatgpt.com/";
+        const headers = {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${api_key}`,
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+        };
+
+        const data = {
+            "model": "gpt-3.5-turbo",
+            "messages": [
+                {"role": "user", "content": prompt},
+            ],
+            "max_tokens": Math.floor(Math.random() * (1050 - 850 + 1) + 850)
+        };
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(data)
+        });
+        const responseData = await response.json();
+        return responseData.choices[0].message.content;
+    } catch (error) {
+        console.error("Error:", error);
+        return "I'm sorry, I couldn't process your request at the moment.";
+    }
+}
+
+
+async function read_api_key() {
+    return 'sk-proj-gZ4wDneN0v1ROlpq584ST3BlbkFJIXJtJTstZnolWikfvSGC';
+}
+    </script>
+</body>
+
+</html>
