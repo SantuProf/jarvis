@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JARVIS - Virtual Assistant</title>
-    <link rel="shortcut icon" href="pipi.jpge" type="image/x-icon">
+    <link rel="shortcut icon" href="pipi.jpeg" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
@@ -144,7 +144,7 @@ async function takeCommand(message){
 
 async function chat_with_gpt(prompt) {
     try {
-        const api_key = await read_api_key(); 
+        const api_key = await read_api_key(sk-proj-gZ4wDneN0v1ROlpq584ST3BlbkFJIXJtJTstZnolWikfvSGC); 
         const url = "https://chatgpt.com/";
         const headers = {
             "Content-Type": "application/json",
@@ -175,7 +175,7 @@ async function chat_with_gpt(prompt) {
 
 
 async function read_api_key() {
-    return 'sk-proj-gZ4wDneN0v1ROlpq584ST3BlbkFJIXJtJTstZnolWikfvSGC';
+    return '';
 }
     </script>
 </body>
